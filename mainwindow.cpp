@@ -174,6 +174,18 @@ QString MainWindow::tokenFromKeyEvent(const QKeyEvent *event)
     case Qt::Key_Enter:
     case Qt::Key_Equal:
         return QStringLiteral("=");
+    // 某些键盘布局或输入法下 event->text() 为空，这里按键码再兜底一次
+    case Qt::Key_Plus:
+        return QStringLiteral("+");
+    case Qt::Key_Minus:
+        return QStringLiteral("−");
+    case Qt::Key_Asterisk:
+        return QStringLiteral("×");
+    case Qt::Key_Slash:
+        return QStringLiteral("÷");
+    case Qt::Key_Period:
+    case Qt::Key_Comma:
+        return QStringLiteral(".");
     case Qt::Key_Escape:
     case Qt::Key_Delete:
         return QStringLiteral("CLEAR");
