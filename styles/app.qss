@@ -1,0 +1,130 @@
+﻿/* 计算器界面样式表：浅色卡片风格，运算符用蓝色区分，等号用主色突出 */
+
+QMainWindow {
+    background-color: #f4f6f9;
+}
+
+QWidget#centralwidget {
+    background-color: #f4f6f9;
+}
+
+/* 上方表达式：次要信息，颜色较浅 */
+QLabel#expressionLabel {
+    color: #7a8290;
+    font-size: 15px;
+    padding-right: 6px;
+}
+
+/* 主显示区 */
+QLineEdit#resultDisplay {
+    background-color: #ffffff;
+    border: 1px solid #dde1e8;
+    border-radius: 12px;
+    padding: 4px 14px;
+    color: #1f2430;
+    font-size: 34px;
+    font-weight: bold;
+}
+
+/* 出错时（除零、结果溢出）显示红色文字与浅红边框 */
+QLineEdit#resultDisplay[calcError="true"] {
+    color: #d93025;
+    border-color: #f2b8b5;
+    background-color: #fdf5f4;
+}
+
+/* 底部提示：正常时灰色，异常提示时红色 */
+QLabel#hintLabel {
+    color: #98a0ab;
+    font-size: 11px;
+    padding-left: 4px;
+}
+
+QLabel#hintLabel[notice="true"] {
+    color: #d93025;
+}
+
+/* 数字与小数点按键 */
+QPushButton {
+    background-color: #ffffff;
+    border: 1px solid #dde1e8;
+    border-radius: 10px;
+    color: #1f2430;
+    font-size: 22px;
+}
+
+QPushButton:hover {
+    background-color: #f2f5fa;
+}
+
+QPushButton:pressed {
+    background-color: #e6ebf2;
+}
+
+/* 运算符按键：浅蓝底、蓝色字 */
+QPushButton#btnAdd,
+QPushButton#btnSubtract,
+QPushButton#btnMultiply,
+QPushButton#btnDivide {
+    background-color: #e8f0fe;
+    border-color: #d2e0fb;
+    color: #1a73e8;
+    font-size: 24px;
+}
+
+QPushButton#btnAdd:hover,
+QPushButton#btnSubtract:hover,
+QPushButton#btnMultiply:hover,
+QPushButton#btnDivide:hover {
+    background-color: #dbe8fd;
+}
+
+QPushButton#btnAdd:pressed,
+QPushButton#btnSubtract:pressed,
+QPushButton#btnMultiply:pressed,
+QPushButton#btnDivide:pressed {
+    background-color: #cddefb;
+}
+
+/* 等号：主色实心按钮 */
+QPushButton#btnEquals {
+    background-color: #1a73e8;
+    border-color: #1a73e8;
+    color: #ffffff;
+    font-size: 24px;
+}
+
+QPushButton#btnEquals:hover {
+    background-color: #1765cc;
+}
+
+QPushButton#btnEquals:pressed {
+    background-color: #14559f;
+}
+
+/* 清除、退格、正负号：浅灰底，与数字键区分 */
+QPushButton#btnClear,
+QPushButton#btnBackspace,
+QPushButton#btnSign {
+    background-color: #eef1f5;
+    border-color: #e2e6ec;
+    color: #3c4351;
+}
+
+QPushButton#btnClear:hover,
+QPushButton#btnBackspace:hover,
+QPushButton#btnSign:hover {
+    background-color: #e4e9ef;
+}
+
+QPushButton#btnClear:pressed,
+QPushButton#btnBackspace:pressed,
+QPushButton#btnSign:pressed {
+    background-color: #d8dee7;
+}
+
+/* 清除键用红色文字突出，避免误触时看不出区别 */
+QPushButton#btnClear {
+    color: #d93025;
+    font-weight: bold;
+}

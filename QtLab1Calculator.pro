@@ -23,5 +23,8 @@ HEADERS += \
 FORMS += \
     mainwindow.ui
 
+RESOURCES += \
+    resources.qrc
+
 # 默认的构建目录规则：debug/release 子目录
 CONFIG += debug_and_release

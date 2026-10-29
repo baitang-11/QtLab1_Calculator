@@ -4,6 +4,7 @@
 #include <QHash>
 #include <QKeyEvent>
 #include <QPushButton>
+#include <QStyle>
 
 namespace {
 /**
@@ -43,6 +44,14 @@ const QString &defaultHintText()
     static const QString text =
         QStringLiteral("键盘：数字 . + − * ÷，Enter 计算，Backspace 退格，Esc 清除");
     return text;
+}
+
+// 样式表中的动态属性改变后，必须重新计算样式才能立即生效
+void repolish(QWidget *widget)
+{
+    widget->style()->unpolish(widget);
+    widget->style()->polish(widget);
+    widget->update();
 }
 } // namespace
 
@@ -107,6 +116,18 @@ void MainWindow::refreshDisplay()
     // 正常时显示键盘操作提示，出现异常输入时临时显示提示信息
     const QString message = m_engine.statusMessage();
     ui->hintLabel->setText(message.isEmpty() ? defaultHintText() : message);
+
+    // 通过动态属性驱动样式表：出错时主显示区变红，异常提示时提示文字变红
+    const bool hasError = m_engine.hasError();
+    const bool hasNotice = !message.isEmpty();
+    if (ui->resultDisplay->property("calcError").toBool() != hasError) {
+        ui->resultDisplay->setProperty("calcError", hasError);
+        repolish(ui->resultDisplay);
+    }
+    if (ui->hintLabel->property("notice").toBool() != hasNotice) {
+        ui->hintLabel->setProperty("notice", hasNotice);
+        repolish(ui->hintLabel);
+    }
 }
 
 /**
