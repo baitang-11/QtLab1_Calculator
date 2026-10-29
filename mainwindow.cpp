@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include <QHash>
+#include <QKeyEvent>
 #include <QPushButton>
 
 namespace {
@@ -106,4 +107,72 @@ void MainWindow::refreshDisplay()
     // 正常时显示键盘操作提示，出现异常输入时临时显示提示信息
     const QString message = m_engine.statusMessage();
     ui->hintLabel->setText(message.isEmpty() ? defaultHintText() : message);
+}
+
+/**
+ * 把一次按键翻译成输入记号。
+ * 优先看 event->text()：这样主键盘和小键盘、Shift+= 得到 '+' 等情况都能自然统一；
+ * 对没有可见字符的功能键（退格、回车、Esc）再回退到 event->key() 判断。
+ */
+QString MainWindow::tokenFromKeyEvent(const QKeyEvent *event)
+{
+    const QString text = event->text();
+    if (text.size() == 1) {
+        const QChar ch = text.at(0);
+        if (ch.isDigit()) {
+            return QString(ch);
+        }
+        switch (ch.unicode()) {
+        case '.':                       // 主键盘句号
+        case ',':                       // 部分布局的逗号同样当小数点
+            return QStringLiteral(".");
+        case '+':
+            return QStringLiteral("+");
+        case '-':
+            return QStringLiteral("−");  // 统一成界面上的减号符号
+        case '*':
+        case 'x':
+        case 'X':
+            return QStringLiteral("×");
+        case '/':
+            return QStringLiteral("÷");
+        case '=':
+            return QStringLiteral("=");
+        case 'c':
+        case 'C':
+            return QStringLiteral("CLEAR");
+        default:
+            break;
+        }
+    }
+
+    switch (event->key()) {
+    case Qt::Key_Backspace:
+        return QStringLiteral("BACK");
+    case Qt::Key_Return:
+    case Qt::Key_Enter:
+    case Qt::Key_Equal:
+        return QStringLiteral("=");
+    case Qt::Key_Escape:
+    case Qt::Key_Delete:
+        return QStringLiteral("CLEAR");
+    case Qt::Key_F9:
+        return QStringLiteral("SIGN");
+    default:
+        break;
+    }
+    return QString();
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    const QString token = tokenFromKeyEvent(event);
+    if (token.isEmpty()) {
+        // 不是计算器关心的按键，交回基类处理（例如 Ctrl+Q 等快捷键）
+        QMainWindow::keyPressEvent(event);
+        return;
+    }
+
+    event->accept();
+    dispatchInput(token);   // 与鼠标点击走同一个入口，保证两种输入行为完全一致
 }
