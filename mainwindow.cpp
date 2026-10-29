@@ -35,6 +35,14 @@ const QHash<QString, QString> &buttonTokens()
     };
     return tokens;
 }
+
+// 没有异常提示时，窗口底部显示的操作说明
+const QString &defaultHintText()
+{
+    static const QString text =
+        QStringLiteral("键盘：数字 . + − * ÷，Enter 计算，Backspace 退格，Esc 清除");
+    return text;
+}
 } // namespace
 
 MainWindow::MainWindow(QWidget *parent)
@@ -94,4 +102,8 @@ void MainWindow::refreshDisplay()
 {
     ui->resultDisplay->setText(m_engine.displayText());
     ui->expressionLabel->setText(m_engine.expressionText());
+
+    // 正常时显示键盘操作提示，出现异常输入时临时显示提示信息
+    const QString message = m_engine.statusMessage();
+    ui->hintLabel->setText(message.isEmpty() ? defaultHintText() : message);
 }
